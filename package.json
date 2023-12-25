@@ -7,20 +7,12 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/muhammad-umair42/kyiv-luxebouquets-backend.git"
-  },
   "keywords": [
     "node",
     "express"
   ],
   "author": "umair",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/muhammad-umair42/kyiv-luxebouquets-backend/issues"
-  },
-  "homepage": "https://github.com/muhammad-umair42/kyiv-luxebouquets-backend#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.1",
