@@ -1,0 +1,23 @@
+{
+  "name": "kyiv-luxebouquets-backend",
+  "version": "1.0.0",
+  "description": "e-commerce website backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muhammad-umair42/kyiv-luxebouquets-backend.git"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "umair",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muhammad-umair42/kyiv-luxebouquets-backend/issues"
+  },
+  "homepage": "https://github.com/muhammad-umair42/kyiv-luxebouquets-backend#readme"
+}
