@@ -46,7 +46,7 @@ router.route("/updateuser").post(isRequestAuthorized, updateUserDetails);
 router.route("/updatepassword").post(isRequestAuthorized, updateUserPassword);
 
 router
-  .route("updatespecialemails")
+  .route("/updatespecialemails")
   .post(isRequestAuthorized, enableOrDisableSpecialEmails);
 
 router.route("/deleteuser/:id").post(isUserAdmin, deleteUser);

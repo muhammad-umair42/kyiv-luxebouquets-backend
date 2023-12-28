@@ -155,7 +155,9 @@ export const userForgotPassword = asyncHandler(async (req, res) => {
 // User Crud Operations
 
 export const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("username fullName _id profilePic");
+  const users = await User.find().select(
+    "username fullName _id profilePicture",
+  );
 
   if (!users) {
     throw new ApiError(500, "Something went wrong while fetching users");
@@ -180,7 +182,7 @@ export const updateUserProfilePicture = asyncHandler(async (req, res) => {
   const profilePictureLocalPath = req.file?.path;
 
   if (!profilePictureLocalPath) {
-    throw new ApiError(400, "Please upload new profile picture");
+    throw new ApiError(400, "Please upload  picture");
   }
 
   const profilePictureURL = await uploadOnCloudinary(profilePictureLocalPath);
@@ -305,7 +307,7 @@ export const updateUserPassword = asyncHandler(async (req, res) => {
 });
 
 export const enableOrDisableSpecialEmails = asyncHandler(async (req, res) => {
-  const specialEmails = req.body;
+  const { specialEmails } = req.body;
 
   if (specialEmails == undefined || specialEmails == "") {
     throw new ApiError(400, "Value is required");
