@@ -24,15 +24,10 @@ const productSchema = new mongoose.Schema(
     },
     combinations: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
       },
     ],
-    category: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
   },
   { timestamps: true },
 );
