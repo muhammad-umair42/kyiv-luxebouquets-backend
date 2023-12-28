@@ -15,7 +15,9 @@ const router = Router();
 router.route("/").get(isUserAdmin, getAllProducts);
 router.route("/product/:id").get(getSingleProduct);
 //secure routes
-router.route("/createproduct").post(isUserAdmin, createProduct);
+router
+  .route("/createproduct")
+  .post(isUserAdmin, upload.single("productImage"), createProduct);
 router
   .route("/updateproductdetails/:id")
   .post(isUserAdmin, updateProductDetails);

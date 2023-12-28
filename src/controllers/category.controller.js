@@ -21,7 +21,7 @@ export const createCategory = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Category Image is required");
   }
 
-  const categoryImageUrl = await uploadOnCloudnary(categoryImageUrl);
+  const categoryImageUrl = await uploadOnCloudinary(categoryImagePath);
 
   if (!categoryImageUrl.url) {
     throw new ApiError(
@@ -41,7 +41,7 @@ export const createCategory = asyncHandler(async (req, res) => {
 
   res
     .status(201)
-    .json(new ApiResponse(201, "Category Created Successfully", category));
+    .json(new ApiResponse(201, category, "Category Created Successfully"));
 });
 
 export const getAllCategory = asyncHandler(async (req, res) => {
@@ -53,12 +53,15 @@ export const getAllCategory = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, "Categories fetched successfully", categories));
+    .json(new ApiResponse(200, categories, "Categories fetched successfully"));
 });
 
 export const getSingleCategoryProducts = asyncHandler(async (req, res) => {
   const category = req.params?.id;
 
+  if (!category) {
+    throw new ApiError(404, "Category Id is required");
+  }
   const categoryProductIds = await Category.findById(category).select(
     "categoryProducts",
   );
@@ -69,9 +72,9 @@ export const getSingleCategoryProducts = asyncHandler(async (req, res) => {
       "Something went wrong while fetching category products",
     );
   }
-
+  console.log(categoryProductIds);
   const categoryProducts = await Product.find({
-    _id: { $in: { ids: categoryProductIds } },
+    _id: { $in: categoryProductIds.categoryProducts },
   }).select("name price");
 
   if (!categoryProducts) {
@@ -83,24 +86,26 @@ export const getSingleCategoryProducts = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .send(
-      200,
-      { categoryProducts: categoryProducts },
-      "Products fetched successfully",
+    .json(
+      new ApiResponse(
+        200,
+        { categoryProducts: categoryProducts },
+        "Products fetched successfully",
+      ),
     );
 });
 
 export const updateCategoryProduct = asyncHandler(async (req, res) => {
-  const newCategoryProducts = req.body;
+  const { products } = req.body;
   const category = req.params.id;
 
-  if (!newCategoryProducts || !category) {
+  if (!products || !category) {
     throw new ApiError(404, "All files are required");
   }
 
   const updatedCategory = await Category.findByIdAndUpdate(
     category,
-    { $set: { categoryProducts: { $each: newCategoryProducts } } },
+    { $set: { categoryProducts: products } },
     { new: true },
   );
 
@@ -119,7 +124,7 @@ export const updateCategoryImage = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Category Image is required");
   }
 
-  const categoryImageUrl = await uploadOnCloudnary(categoryImageUrl);
+  const categoryImageUrl = await uploadOnCloudinary(categoryImagePath);
 
   if (!categoryImageUrl.url) {
     throw new ApiError(
@@ -161,5 +166,7 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 
   await Category.findByIdAndDelete(categoryId);
 
-  res.status(200).json(200, {}, "Category deleted successfully");
+  res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Category deleted successfully"));
 });

@@ -22,7 +22,7 @@ router
   .post(isUserAdmin, updateCategoryProduct);
 
 router
-  .route("/updatecategoryimage/;id")
+  .route("/updatecategoryimage/:id")
   .post(isUserAdmin, upload.single("categoryImage"), updateCategoryImage);
 
 router.route("/deletecategory/:id").post(isUserAdmin, deleteCategory);
