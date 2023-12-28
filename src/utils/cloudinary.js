@@ -14,7 +14,10 @@ const uploadOnCloudinary = async function (localFilePath) {
     const result = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-
+    if (!result.url) {
+      return null;
+    }
+    fs.unlinkSync(localFilePath);
     return result;
   } catch (error) {
     fs.unlinkSync(localFilePath);
@@ -24,3 +27,21 @@ const uploadOnCloudinary = async function (localFilePath) {
 };
 
 export { uploadOnCloudinary };
+
+export const deleteFromCloudinary = async function (url) {
+  try {
+    const pathParts = url.split("/");
+
+    // Get the last part of the array (after the last '/')
+    const lastString = pathParts[pathParts.length - 1];
+
+    const filenameParts = lastString.split(".");
+
+    // Get the filename without the extension
+    const filenameWithoutExtension = filenameParts[0];
+    await cloudinary.api.delete_resources(filenameWithoutExtension);
+    return "success";
+  } catch (error) {
+    return "error";
+  }
+};
