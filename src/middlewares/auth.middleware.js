@@ -12,9 +12,8 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
   */
   //Getting Tokens from body
 
-  const userAccessToken =
-    req.cookies?.accessToken ||
-    req.header("Authorization").replace("Bearer ", "");
+  const userAccessToken = req.cookies?.accessToken;
+  console.log(userAccessToken);
 
   const userRefreshToken = req.cookies?.refreshToken;
 
