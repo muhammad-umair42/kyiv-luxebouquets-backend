@@ -231,9 +231,8 @@ export const updateUserProfilePicture = asyncHandler(async (req, res) => {
 export const updateUserDetails = asyncHandler(async (req, res) => {
   const { username, fullName, email, contact, secretAnswer, address } =
     req.body;
-
   if (
-    [username, fullName, email, contact, secretAnswer, address].some(
+    [username, fullName, email, secretAnswer, address].some(
       field => field.trim() === '',
     )
   ) {
@@ -310,8 +309,7 @@ export const updateUserPassword = asyncHandler(async (req, res) => {
 
 export const enableOrDisableSpecialEmails = asyncHandler(async (req, res) => {
   const { specialEmails } = req.body;
-
-  if (specialEmails == undefined || specialEmails == '') {
+  if (specialEmails == undefined) {
     throw new ApiError(400, 'Value is required');
   }
 
@@ -342,4 +340,34 @@ export const deleteUser = asyncHandler(async (req, res) => {
   await User.findByIdAndDelete(id);
 
   res.status(200).json(new ApiResponse(200, {}, 'User deleted successfully'));
+});
+
+export const updateUserSubscription = asyncHandler(async (req, res) => {
+  const { planName, isSubscribed, deliveriesFrequency } = req.body;
+
+  if (!planName || !deliveriesFrequency) {
+    throw new ApiError(404, 'Please select a plan');
+  }
+
+  if (!req.user) {
+    throw new ApiError(404, 'User not found in request');
+  }
+
+  const user = await User.findOneAndUpdate(
+    { _id: req.user?._id }, // Find user by ID
+    {
+      $set: {
+        'subscribed.planName': planName,
+        'subscribed.isSubscribed': isSubscribed,
+        'subscribed.deliveriesFrequency': deliveriesFrequency,
+      },
+    },
+    { new: true },
+  );
+
+  if (!user) {
+    throw new ApiError(404, 'Something went wrong while updating user');
+  }
+
+  res.status(200).json(new ApiResponse(200, user, 'Successfully Subscribed'));
 });

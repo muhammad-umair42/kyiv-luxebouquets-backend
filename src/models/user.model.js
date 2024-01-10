@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -47,8 +47,16 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     subscribed: {
-      type: Boolean,
-      default: false,
+      planName: {
+        type: String,
+      },
+      isSubscribed: {
+        type: Boolean,
+        default: false,
+      },
+      deliveriesFrequency: {
+        type: String,
+      },
     },
     specialEmails: {
       type: Boolean,
@@ -63,8 +71,8 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
   next();
@@ -85,4 +93,4 @@ userSchema.methods.generateRefreshToken = function () {
   });
 };
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model('User', userSchema);
