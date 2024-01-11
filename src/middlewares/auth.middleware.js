@@ -1,8 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
-import jwt from "jsonwebtoken";
-import { generateAccessTokenAndRefreshToken } from "../utils/generateTokens.js";
-import { User } from "../models/user.model.js";
-import { ApiError } from "../utils/ApiError.js";
+import jwt from 'jsonwebtoken';
+import { User } from '../models/user.model.js';
+import { ApiError } from '../utils/ApiError.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { generateAccessTokenAndRefreshToken } from '../utils/generateTokens.js';
 
 export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
   /*  this function have 2 secarios
@@ -13,13 +13,12 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
   //Getting Tokens from body
 
   const userAccessToken = req.cookies?.accessToken;
-  console.log(userAccessToken);
 
   const userRefreshToken = req.cookies?.refreshToken;
 
   //If tokens not found in request
   if (!userAccessToken || !userRefreshToken) {
-    throw new ApiError(404, "Auth Tokens missing");
+    throw new ApiError(404, 'Auth Tokens missing');
   }
 
   //Checking if access token is valid otherwise creating new from refreshtoken
@@ -34,17 +33,17 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
 
     //fetching user
     const user = await User.findById(decodedAccessToken._id).select(
-      "-password",
+      '-password',
     );
 
     //If user is not found
     if (!user) {
-      throw new ApiError(404, "Invalid User");
+      throw new ApiError(404, 'Invalid User');
     }
 
     //Checking if the same user is making request
     if (userRefreshToken !== user.refreshToken && user.isAdmin == false) {
-      throw new ApiError(404, "UnAuthorized User");
+      throw new ApiError(404, 'UnAuthorized User');
     }
 
     req.user = user;
@@ -52,7 +51,7 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
   } catch (error) {
     //if access token expired
 
-    if (error.message === "jwt expired") {
+    if (error.message === 'jwt expired') {
       try {
         //checking refresh token
 
@@ -66,12 +65,12 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
 
         //if user is not found
         if (!user) {
-          throw new ApiError(404, "Invalid User");
+          throw new ApiError(404, 'Invalid User');
         }
 
         //if same user or admin is not sending request
         if (userRefreshToken !== user.refreshToken && user.isAdmin == false) {
-          throw new ApiError(404, "UnAuthorized User");
+          throw new ApiError(404, 'UnAuthorized User');
         }
 
         //generating new access token and refresh token
@@ -80,7 +79,7 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
 
         //getting user with new access token and refresh token
         const updatedUser = await User.findById(user._id).select(
-          "-password -refreshToken",
+          '-password -refreshToken',
         );
 
         //setting new access token and refresh token in cookies
@@ -89,21 +88,21 @@ export const isRequestAuthorized = asyncHandler(async (req, res, next) => {
           secure: true,
         };
         res
-          .cookie("accessToken", accessToken, options)
-          .cookie("refreshToken", refreshToken, options);
+          .cookie('accessToken', accessToken, options)
+          .cookie('refreshToken', refreshToken, options);
 
         //setting user in req to updated user and going next
         req.user = updatedUser;
         next();
       } catch (error) {
         //error for invalid or expired refresh token
-        throw new ApiError(404, "Invalid or expired tokens", error);
+        throw new ApiError(404, 'Invalid or expired tokens', error);
       }
     } else {
       //if error is not because of expired access token
       throw new ApiError(
         500,
-        "Invalid Access Token Or Internal Server Error",
+        'Invalid Access Token Or Internal Server Error',
         error,
       );
     }
@@ -115,13 +114,13 @@ export const isUserAdmin = asyncHandler(async (req, res, next) => {
 
   const userAccessToken =
     req.cookies?.accessToken ||
-    req.header("Authorization").replace("Bearer ", "");
+    req.header('Authorization').replace('Bearer ', '');
 
   const userRefreshToken = req.cookies?.refreshToken;
 
   //If tokens not found in request
   if (!userAccessToken || !userRefreshToken) {
-    throw new ApiError(404, "Auth Tokens missing");
+    throw new ApiError(404, 'Auth Tokens missing');
   }
 
   //Checking if access token is valid otherwise creating new from refreshtoken
@@ -136,17 +135,17 @@ export const isUserAdmin = asyncHandler(async (req, res, next) => {
 
     //fetching user
     const user = await User.findById(decodedAccessToken._id).select(
-      "-password",
+      '-password',
     );
 
     //If user is not found
     if (!user) {
-      throw new ApiError(404, "Invalid User");
+      throw new ApiError(404, 'Invalid User');
     }
 
     //Checking if the same user is making request
     if (userRefreshToken !== user.refreshToken || user.isAdmin == false) {
-      throw new ApiError(404, "User not Admin");
+      throw new ApiError(404, 'User not Admin');
     }
     req.user = user;
 
@@ -154,7 +153,7 @@ export const isUserAdmin = asyncHandler(async (req, res, next) => {
   } catch (error) {
     //if access token expired
 
-    if (error.message === "jwt expired") {
+    if (error.message === 'jwt expired') {
       try {
         //checking refresh token
 
@@ -168,12 +167,12 @@ export const isUserAdmin = asyncHandler(async (req, res, next) => {
 
         //if user is not found
         if (!user) {
-          throw new ApiError(404, "Invalid User");
+          throw new ApiError(404, 'Invalid User');
         }
 
         //if same user or admin is not sending request
         if (userRefreshToken !== user.refreshToken || user.isAdmin == false) {
-          throw new ApiError(404, "User not Admin");
+          throw new ApiError(404, 'User not Admin');
         }
 
         //generating new access token and refresh token
@@ -182,7 +181,7 @@ export const isUserAdmin = asyncHandler(async (req, res, next) => {
 
         //getting user with new access token and refresh token
         const updatedUser = await User.findById(user._id).select(
-          "-password -refreshToken",
+          '-password -refreshToken',
         );
 
         //setting new access token and refresh token in cookies
@@ -191,19 +190,19 @@ export const isUserAdmin = asyncHandler(async (req, res, next) => {
           secure: true,
         };
         res
-          .cookie("accessToken", accessToken, options)
-          .cookie("refreshToken", refreshToken, options);
+          .cookie('accessToken', accessToken, options)
+          .cookie('refreshToken', refreshToken, options);
 
         //setting user in req to updated user and going next
         req.user = updatedUser;
         next();
       } catch (error) {
         //error for invalid or expired refresh token
-        throw new ApiError(404, "UnAuthorized");
+        throw new ApiError(404, 'UnAuthorized');
       }
     } else {
       //if error is not because of expired access token
-      throw new ApiError(500, "Something went wrong");
+      throw new ApiError(500, 'Something went wrong');
     }
   }
 });
