@@ -7,26 +7,18 @@ import orderRouter from './routes/order.routes.js';
 import productRouter from './routes/product.routes.js';
 import userRouter from './routes/user.routes.js';
 const app = express();
-const allowedOrigins = [
-  'https://flower-shop-cleint.vercel.app',
-  'https://flower-shop-cleint-git-main-abdulhameed10s-projects.vercel.app',
-  'https://flower-shop-cleint-abdulhameed10s-projects.vercel.app',
-  'https://kyiv-luxebouquets-frontend-41h62vglq.vercel.app'
-];
-
-// app middlewares and configuration
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
-    // If origin is in the allowedOrigins array or if the request doesn't have an origin (like Postman), allow it
-    if (allowedOrigins.includes(origin) || !origin) {
+    if (!origin || /https?:\/\/.*\.vercel\.app$/.test(origin)) {
+      // Allow requests from any origin ending with vercel.app or no origin (e.g., server-side requests)
       callback(null, true);
     } else {
+      // Block other origins
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
-}));
-
+};
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '16kb' }));
 
 app.use(express.urlencoded({ extended: true, limit: '16kb' }));
