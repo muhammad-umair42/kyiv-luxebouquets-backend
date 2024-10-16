@@ -8,16 +8,11 @@ import productRouter from './routes/product.routes.js';
 import userRouter from './routes/user.routes.js';
 const app = express();
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || /https?:\/\/.*\.vercel\.app$/.test(origin)) {
-      // Allow requests from any origin ending with vercel.app or no origin (e.g., server-side requests)
-      callback(null, true);
-    } else {
-      // Block other origins
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: 'https://kyiv-luxebouquets-frontend.vercel.app', // Your Vercel app URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 };
+
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '16kb' }));
 
