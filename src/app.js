@@ -15,7 +15,7 @@ const allowedOrigins = [
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://kyiv-luxebouquets-frontend.vercel.app', // Only allow requests from our Vite app
+  origin: 'https://kyiv-luxebouquets-frontend-gyev9xy1z.vercel.app', // Only allow requests from our Vite app
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
   credentials: true,
