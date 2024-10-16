@@ -7,10 +7,24 @@ import orderRouter from './routes/order.routes.js';
 import productRouter from './routes/product.routes.js';
 import userRouter from './routes/user.routes.js';
 const app = express();
+const allowedOrigins = [
+  'https://kyiv-luxebouquets-frontend.vercel.app',
+  'http://localhost:5173',
+  'https://example.com',
+];
+
 const corsOptions = {
-  origin: 'https://kyiv-luxebouquets-frontend.vercel.app', // Your Vercel app URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      // Allow the request if the origin is in the allowed list or if no origin (server-side requests)
+      callback(null, true);
+    } else {
+      // Block the request if the origin is not in the allowed list
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));
